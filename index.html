@@ -1,21 +1,185 @@
 <!DOCTYPE html>
-<html lang="pt-BT">
-
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Extrator de Palavras-Chave</title>
-    <link rel="stylesheet" href="style.css">
-</head>
+    <title>Interface Futurista</title>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap" rel="stylesheet">
+
+    <style>
+        /* Variáveis de cores para fácil personalização */
+        :root {
+            --cor-destaque: #00ffc2; /* Cian vibrante */
+            --cor-gradiente-fundo: linear-gradient(113deg, #0a0a0a 0%, #1a1a1a 44.96%, #1a1a1a 100%);
+            --cor-fundo-elemento: rgba(26, 26, 26, 0.7);
+            --cor-texto-principal: #e0e0e0;
+            --sombra-led: 0 0 10px var(--cor-destaque), 0 0 20px var(--cor-destaque);
+        }
+
+        /* Estilos gerais */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Orbitron', sans-serif;
+            transition: all 0.3s ease-in-out;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+            background: var(--cor-gradiente-fundo);
+            color: var(--cor-texto-principal);
+            min-height: 100vh;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Efeito de grade de fundo e brilho dinâmico */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(to right, rgba(0, 0, 0, 0.1) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.2;
+            z-index: 0;
+        }
+        
+        .container {
+            display: flex;
+            width: 90%;
+            max-width: 65rem;
+            flex-direction: column;
+            align-items: center;
+            gap: 3rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Título e animação de piscar */
+        h1 {
+            color: var(--cor-destaque);
+            text-align: center;
+            font-size: clamp(2rem, 5vw, 2.8rem);
+            font-weight: 600;
+            text-transform: uppercase;
+            text-shadow: var(--sombra-led);
+            animation: flicker 2s infinite alternate;
+        }
+
+        @keyframes flicker {
+            0% { opacity: 0.95; text-shadow: var(--sombra-led); }
+            5% { opacity: 0.9; }
+            10% { opacity: 0.95; }
+            15% { opacity: 0.9; }
+            20% { opacity: 1; text-shadow: 0 0 15px var(--cor-destaque), 0 0 25px var(--cor-destaque); }
+            100% { opacity: 1; text-shadow: var(--sombra-led); }
+        }
+
+        /* Campo de texto com efeito de "borda ativa" */
+        #entrada-de-texto {
+            display: flex;
+            height: clamp(8rem, 20vw, 12rem);
+            padding: 1.4rem 2.5rem;
+            align-items: flex-start;
+            gap: 0.625rem;
+            align-self: stretch;
+            border-radius: 0.625rem;
+            background: var(--cor-fundo-elemento);
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            color: var(--cor-texto-principal);
+            border: 2px solid rgba(0, 255, 194, 0.2);
+            box-shadow: 0 0 5px rgba(0, 255, 194, 0.5);
+            resize: none;
+        }
+
+        #entrada-de-texto:focus {
+            outline: none;
+            border-color: var(--cor-destaque);
+            box-shadow: 0 0 15px var(--cor-destaque), 0 0 30px var(--cor-destaque);
+        }
+
+        #entrada-de-texto::placeholder {
+            color: #828282;
+        }
+
+        /* Botão com efeito de "carregar" */
+        #botao-palavrachave {
+            display: flex;
+            padding: 1.25rem 2.5rem;
+            justify-content: center;
+            align-items: center;
+            gap: 0.625rem;
+            border-radius: 0.5rem;
+            border: none;
+            background: var(--cor-destaque);
+            color: #000;
+            font-size: clamp(2rem, 5vw, 2.5rem);
+            font-weight: 500;
+            cursor: pointer;
+            box-shadow: 0 0 10px var(--cor-destaque), 0 0 20px var(--cor-destaque);
+        }
+
+        #botao-palavrachave:hover {
+            transform: scale(1.05);
+            background: #00e0b3; /* Cor um pouco mais clara */
+            box-shadow: 0 0 15px var(--cor-destaque), 0 0 30px var(--cor-destaque);
+        }
+
+        #botao-palavrachave:active {
+            transform: scale(0.95);
+        }
+
+        /* Seção de resultado */
+        #resultado-palavrachave {
+            display: flex;
+            border-radius: 0.625rem;
+            align-self: stretch;
+            color: var(--cor-destaque);
+            font-size: 2.5rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+            max-width: 100%;
+            max-height: 50vh;
+            overflow: auto;
+            text-shadow: var(--sombra-led);
+            background: var(--cor-fundo-elemento);
+            padding: 1.5rem;
+            border: 2px solid var(--cor-destaque);
+            box-shadow: var(--sombra-led);
+        }
+
+        /* Adaptações para telas menores */
+        @media (max-width: 768px) {
+            .container {
+                gap: 2rem;
+            }
+            #entrada-de-texto, #botao-palavrachave, #resultado-palavrachave {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
 <body>
     <div class="container">
-        <h1>Extrator de palavras-chave</h1>
-        <textarea id="entrada-de-texto" placeholder="Digite ou cole seu texto aqui..."></textarea>
-        <button id="botao-palavrachave">Extrair</button>
-        <div id="resultado-palavrachave"></div>
+        <h1>Análise de Texto</h1>
+        <textarea id="entrada-de-texto" placeholder="Digite seu texto aqui..."></textarea>
+        <button id="botao-palavrachave">Analisar</button>
+        <div id="resultado-palavrachave">
+            Aguardando análise...
+        </div>
     </div>
-    <script type="module" src="script.js"></script>
 </body>
-
 </html>
